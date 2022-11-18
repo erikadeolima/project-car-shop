@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import ICar from '../Interfaces/ICar';
 import CarService from '../Services/CarService';
+// import CustomError from '../middlewares/errors/CustomError';
 
 export default class CarController {
   private req: Request;
@@ -28,6 +29,20 @@ export default class CarController {
       };
       const newCar = await this.carService.create(car);
       this.res.status(201).json(newCar);
+    } catch (error) {
+      this.next(error);
+    }
+  }
+  public async getAllCars() {
+    const cars = await this.carService.getAllCars();
+    return this.res.status(200).json(cars);
+  }
+
+  public async getCarById() {
+    try {
+      const { id } = this.req.params;      
+      const car = await this.carService.getCarById(id as string);
+      this.res.status(200).json(car);
     } catch (error) {
       this.next(error);
     }

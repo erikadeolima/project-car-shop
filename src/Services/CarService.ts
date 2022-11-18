@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
@@ -23,7 +24,11 @@ export default class CarService {
   }
 
   async getCarById(id:string) {
+    if (!isValidObjectId(id)) throw new CustomError('Invalid mongo id', 422);
+
     const car = await this.CarODM.getById(id);
+    console.log('🚀 ~ file: CarService.ts ~ line 30 ~ CarService ~ getCarById ~ car', car);
+    
     if (!car) throw new CustomError('Car not found', 404);
 
     return this.createCarDomain(car);
