@@ -1,12 +1,12 @@
 import ICar from '../Interfaces/ICar';
 
 export default class Cars {
-  private id?: string | undefined; // undefined se os dados não estiverem no banco (Ex: antes do cadastro)
-  private model: string;
-  private year: number;
-  private color: string;
-  private status?: boolean | undefined;
-  private buyValue: number;
+  protected id?: string | undefined; // undefined se os dados não estiverem no banco (Ex: antes do cadastro)
+  protected model: string;
+  protected year: number;
+  protected color: string;
+  protected status?: boolean | undefined;
+  protected buyValue: number;
   private doorsQty:number;
   private seatsQty: number;
 
