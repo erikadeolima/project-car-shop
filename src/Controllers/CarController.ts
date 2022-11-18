@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+// import { isValidObjectId } from 'mongoose';
 import ICar from '../Interfaces/ICar';
 import CarService from '../Services/CarService';
 // import CustomError from '../middlewares/errors/CustomError';
@@ -40,9 +41,9 @@ export default class CarController {
 
   public async getCarById() {
     try {
-      const { id } = this.req.params;      
+      const { id } = this.req.params;
       const car = await this.carService.getCarById(id as string);
-      this.res.status(200).json(car);
+      return this.res.status(200).json(car);
     } catch (error) {
       this.next(error);
     }
