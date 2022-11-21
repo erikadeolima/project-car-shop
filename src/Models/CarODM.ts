@@ -16,4 +16,8 @@ export default class VehicleODM extends AbstractODM<ICar> {
 
     super(schema, 'cars');
   }
+  // https://mongoosejs.com/docs/api.html#model_Model-findByIdAndUpdate
+  public async updateCarById(_id: string, car: ICar): Promise<ICar | null > {
+    return this.model.findByIdAndUpdate({ _id }, car, { new: true });
+  }
 }

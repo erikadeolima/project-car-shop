@@ -27,16 +27,28 @@ export default class CarService {
     if (!isValidObjectId(id)) {
       throw new CustomError('Invalid mongo id', 422);
     }
-    const car = await this.CarODM.getById(id);
-    console.log('🚀 ~ file: CarService.ts ~ line 30 ~ CarService ~ getCarById ~ car', car);
-    
-    if (!car) {
+    const carSearchResult = await this.CarODM.getById(id);
+  
+    if (!carSearchResult) {
       throw new CustomError('Car not found', 404);
     }
-    return this.createCarDomain(car);
+    return this.createCarDomain(carSearchResult);
   }
 
-  private createCarDomain(car: ICar): Car {
-    return new Car(car);
+  async updateCarById(id:string, car: ICar) {
+    if (!isValidObjectId(id)) {
+      throw new CustomError('Invalid mongo id', 422);
+    }
+    const carToUpdate = await this.CarODM.updateCarById(id, { ...car });
+    if (!carToUpdate) {
+      throw new CustomError('Car not found', 404);
+    }
+    return this.createCarDomain(carToUpdate);
+  }
+  private createCarDomain(car: ICar | null): Car | null | undefined {
+    if (car) {
+      return new Car(car);
+    }
+    return null;
   }
 }
