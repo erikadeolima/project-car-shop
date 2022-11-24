@@ -21,4 +21,9 @@ export default class VehicleODM extends AbstractODM<IMotorcycle> {
     : Promise<IMotorcycle | null > {
     return this.model.findByIdAndUpdate({ _id }, motorcycle, { new: true });
   }
+
+  public async deleteMotorcycleById(_id: string): Promise<boolean> {
+    const result = await this.model.deleteOne({ _id });
+    return result.acknowledged;
+  }
 }

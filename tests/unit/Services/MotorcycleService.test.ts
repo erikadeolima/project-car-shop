@@ -6,6 +6,9 @@ import IMotorcycle from '../../../src/Interfaces/IMotorcycle';
 import MotorcycleService from '../../../src/Services/MotorcycleService';
 import Motorcycle from '../../../src/Domains/Motorcycle';
 
+// const invalidMongoId = 'Invalid mongo id';
+const notFound = 'Motorcycle not found';
+
 const motorcycleWithoutID: IMotorcycle = {
   model: 'Honda Cb 400f Hornet',
   year: 2005,
@@ -50,8 +53,8 @@ const motorcycleWithID: IMotorcycle = {
   engineCapacity: 600,
 };
 
-describe('Testa a camada CarService', function () {
-  it('Se é possivel cadastrar um carro na rota POST `/motorcycles`', async function () {
+describe('Testa a camada MotocycleService', function () {
+  it('Se é possivel cadastrar uma moto na rota POST `/motorcycles`', async function () {
     const outputMotorcycle = new Motorcycle(motorcycleWithoutID);
 
     sinon.stub(Model, 'create').resolves(outputMotorcycle);
@@ -62,7 +65,7 @@ describe('Testa a camada CarService', function () {
     expect(result).to.be.deep.equal(outputMotorcycle);
   });
 
-  it('Se é possivel listar os carros na rota GET `/motorcycles`', async function () {
+  it('Se é possivel listar as motos na rota GET `/motorcycles`', async function () {
     sinon.stub(Model, 'find').resolves(motorcyclesArray);
 
     const service = new MotorcycleService();
@@ -71,7 +74,7 @@ describe('Testa a camada CarService', function () {
     expect(result).to.be.deep.equal(motorcyclesArray);
   });
 
-  it(`Se é possivel listar a busca de um carro por ID 
+  it(`Se é possivel listar a busca de uma moto por ID 
   na rota GET '/motorcycles/:id'`, async function () {
     sinon.stub(Model, 'findOne').resolves(motorcycleWithID);
 
@@ -82,7 +85,7 @@ describe('Testa a camada CarService', function () {
   });
 
   it(`Se é possivel retornar um erro 
-  caso a busca de um carro por ID seja inválida na rota GET '/motorcycles/:id'`, async function () {
+  caso a busca de uma moto por ID seja inválida na rota GET '/motorcycles/:id'`, async function () {
     sinon.stub(Model, 'findOne').resolves({});
     try {
       const service = new MotorcycleService();
@@ -92,7 +95,7 @@ describe('Testa a camada CarService', function () {
     }
   });
 
-  it('Se é possivel atualizar um carro pelo  na rota PUT \'/motorcycles/:id\'', async function () {
+  it('Se é possivel atualizar uma moto pelo  na rota PUT \'/motorcycles/:id\'', async function () {
     sinon.stub(Model, 'findByIdAndUpdate').resolves(motorcycleWithID);
     
     const service = new MotorcycleService();
@@ -103,14 +106,38 @@ describe('Testa a camada CarService', function () {
   });
 
   it(`Se é possivel retornar um erro caso o ID seja inválido 
-  ao tentar  atualizar um carro pelo  na rota PUT '/motorcycles/:id'`, async function () {
+  ao tentar  atualizar uma moto pelo  na rota PUT '/motorcycles/:id'`, async function () {
     sinon.stub(Model, 'findByIdAndUpdate').resolves({});
 
     try {
       const service = new MotorcycleService();
       await service.updateMotorcycleById('634852326b35b59438fbea2f', motorcycleWithoutID);
     } catch (error) {
-      expect((error as Error).message).to.be.equal('Motorcycle not found');
+      expect((error as Error).message).to.be.equal(notFound);
+    }
+  });
+
+  it('Se é possivel deletar uma moto pelo  na rota DELETE \'/motorcycles/:id\'', async function () {
+    const outputMotorcycle = new Motorcycle(motorcycleWithoutID);
+
+    sinon.stub(Model, 'create').resolves(outputMotorcycle);
+    sinon.stub(Model, 'deleteOne').resolves({ acknowledged: true, deletedCount: 1 });
+    
+    const service = new MotorcycleService();
+    const result = await 
+    service.deleteMotorcycleById('634852326b35b59438fbea2f');
+    expect(result).to.be.deep.equal(true);
+  });
+
+  it(`Se é possivel retornar uma menssagem caso o ID seja inválido 
+  ao tentar  deletar uma moto pelo  na rota DELETE '/motorcycles/:id'`, async function () {
+    sinon.stub(Model, 'deleteOne').resolves({ acknowledged: false, deletedCount: 0 });
+
+    try {
+      const service = new MotorcycleService();
+      await service.deleteMotorcycleById('634852326b35b59438fbea2f');
+    } catch (error) {
+      expect((error as Error).message).to.be.equal(notFound);
     }
   });
 

@@ -6,6 +6,9 @@ import ICar from '../../../src/Interfaces/ICar';
 import CarService from '../../../src/Services/CarService';
 import Car from '../../../src/Domains/Car';
 
+// const invalidMongoId = 'Invalid mongo id';
+const notFound = 'Car not found';
+
 const carsWithID: ICar = {
   id: '634852326b35b59438fbea2f',
   model: 'Marea',
@@ -87,7 +90,7 @@ describe('Testa a camada CarService', function () {
       const service = new CarService();
       await service.getCarById(carsWithID.id as string);
     } catch (error) {
-      expect((error as Error).message).to.be.equal('Car not found');
+      expect((error as Error).message).to.be.equal(notFound);
     }
   });
 
@@ -108,7 +111,30 @@ describe('Testa a camada CarService', function () {
       const service = new CarService();
       await service.updateCarById('634852326b35b59438fbea2f', carsWithoutID);
     } catch (error) {
-      expect((error as Error).message).to.be.equal('Car not found');
+      expect((error as Error).message).to.be.equal(notFound);
+    }
+  });
+  it('Se é possivel deletar um carro pelo  na rota DELETE \'/cars/:id\'', async function () {
+    const outputCar = new Car(carsWithoutID);
+
+    sinon.stub(Model, 'create').resolves(outputCar);
+    sinon.stub(Model, 'deleteOne').resolves({ acknowledged: true, deletedCount: 1 });
+    
+    const service = new CarService();
+    const result = await 
+    service.deleteCarById('634852326b35b59438fbea2f');
+    expect(result).to.be.deep.equal(true);
+  });
+
+  it(`Se é possivel retornar uma menssagem caso o ID seja inválido 
+  ao tentar  deletar um carro pelo  na rota DELETE '/cars/:id'`, async function () {
+    sinon.stub(Model, 'deleteOne').resolves({ acknowledged: false, deletedCount: 0 });
+
+    try {
+      const service = new CarService();
+      await service.deleteCarById('634852326b35b59438fbea2f');
+    } catch (error) {
+      expect((error as Error).message).to.be.equal(notFound);
     }
   });
 

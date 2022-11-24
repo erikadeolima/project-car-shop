@@ -35,8 +35,12 @@ export default class CarController {
     }
   }
   public async getAllMotorcycles() {
-    const motorcycles = await this.motorcycleService.getAllMotorcycles();
-    return this.res.status(200).json(motorcycles);
+    try {
+      const motorcycles = await this.motorcycleService.getAllMotorcycles();
+      return this.res.status(200).json(motorcycles);
+    } catch (error) {
+      this.next(error);
+    }
   }
 
   public async getMotorcycleById() {
@@ -55,6 +59,16 @@ export default class CarController {
     try {
       const motorcycle = await this.motorcycleService.updateMotorcycleById(id, motorcycleUpdated);
       return this.res.status(200).json(motorcycle);
+    } catch (error) {
+      this.next(error);
+    }
+  }
+
+  public async deleteMotorcycleById() {
+    const { id } = this.req.params;
+    try {
+      const motorcycle = await this.motorcycleService.deleteMotorcycleById(id);
+      return this.res.status(204).json(motorcycle);
     } catch (error) {
       this.next(error);
     }
