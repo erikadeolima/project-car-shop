@@ -1,11 +1,24 @@
 # Boas-vindas ao meu repositório do projeto Car Shop!
 
-Quer ver o projeto funcionando dentro do ambiente do MongoDB?
+## Me dê feedbacks sobre o projeto!
 
- Utiliza Linux? Pule as etapas **1 a 5**. 
- 
- Utiliza Windows? Siga o seguinte passo a passo:
+Entre em contato pelas redes sociais e me dê dicas, conselhos e informações que julgar necessario para o meu crescimento como dev.
+
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white&link=https://github.com/erikadeolima)](https://github.com/erikadeolima)
+[![Linkedin Badge](https://img.shields.io/badge/-erikadeolima-blue?style=flat&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/erikadeolima/)](https://www.linkedin.com/in/erikadeolima/)
+[![Hotmail](https://img.shields.io/badge/-erikadeolima-c14438?style=flat&logo=microsoft-outlook&logoColor=white&link=mailto:erikadeo.lima@hotmail.com)](mailto:erikadeo.lima@hotmail.com)
+
+---
+
+## Quer ver o projeto funcionando dentro do ambiente do MongoDB?
+---
+ #### Utiliza Linux? Pule as etapas **1 a 5**. 
+
+---
+ #### Utiliza Windows? Siga o seguinte passo a passo:
   - **⚠ Retirado do tutorial [Como usar Docker sem GNU/Linux](https://stack.desenvolvedor.expert/appendix/docker/macos_e_windows.html)**
+
+---
 
   1º - Instale o Docker, que é um gerenciador de ambientes virtuais, em sua máquina:
       Pode achar o que melhor se adequa a sua versão de Sistema Operacinal (S.O.) [aqui](https://www.docker.com/products/docker-desktop/);
@@ -32,13 +45,316 @@ Quer ver o projeto funcionando dentro do ambiente do MongoDB?
   - Instale as dependências com `npm install`, **DENTRO** do container, ou seja, no terminal que aparece após a execução do comando `docker exec -it car_shop bash` citado acima. 
 
   - ✨ **Dica:** A extensão `Remote - Containers` (que estará na seção de extensões recomendadas do VS Code) é indicada para que você possa desenvolver sua aplicação no container Docker direto no VS Code, como você faz com seus arquivos locais.
-
-# 👨‍💻 O que foi desenvolvido
+---
+## 👨‍💻 O que foi desenvolvido
 
   Neste projeto, foi aplicado os princípios de Programação Orientada a Objetos (`POO`) para a construção de uma API com `CRUD` para gerenciar uma concessionária de veículos. Isso foi feito utilizando o banco de dados `MongoDB` através do framework do `Mongoose`.
-# Orientações
+  
+## Orientações
+<summary>
+
+### A rota POST: /cars é possível cadastrar um carro
+<details open>
+  - Através do caminho `/cars` é possível acessar o banco de dados do MongoDB e realizar o cadastro de um carro, com o seguinte formato de corpo da requisição tem o formato abaixo:
+
+  ```json
+  {
+    "model": "Marea",
+    "year": 2002,
+    "color": "Black",
+    "status": true, // item opcional
+    "buyValue": 15.990,
+    "doorsQty": 4,
+    "seatsQty": 5
+  }
+  ```
+  - Que quando cadastrado retornará um JSON com as seguintes chaves:
+  ```json
+  {
+    "id": "6348513f34c397abcad040b2",
+    "model": "Marea",
+    "year": 2002,
+    "color": "Black",
+    "status": true,
+    "buyValue": 15.990,
+    "doorsQty": 4,
+    "seatsQty": 5
+  }
+  ```
+</details>
+
+---
+
+### A rota GET:/cars é possível listar todos os carros e a  rota GET:/cars/:id é possível listar um carro
+<details open>
+
+  - Através do caminho (`/cars`) e (`/cars/:id`) é possível listar os carros da collection `cars` do banco de dados e apenas o carro com o `id` presente na URL deve ser retornado, respectivamente;
+
+  - Será validado que é possível listar todos os carros;
+  - Sendo os JSON's respectivos: 
+  ```json
+    [
+      {
+        "id": "634852326b35b59438fbea2f",
+        "model": "Marea",
+        "year": 2002,
+        "color": "Black",
+        "status": true,
+        "buyValue": 15.99,
+        "doorsQty": 4,
+        "seatsQty": 5
+      },
+      {
+        "id": "634852326b35b59438fbea31",
+        "model": "Tempra",
+        "year": 1995,
+        "color": "Black",
+        "buyValue": 39,
+        "doorsQty": 2,
+        "seatsQty": 5
+      }
+    ]
+    ```
+
+  ```json
+    {
+      "id": "634852326b35b59438fbea2f",
+      "model": "Marea",
+      "year": 2002,
+      "color": "Black",
+      "status": true,
+      "buyValue": 15.99,
+      "doorsQty": 4,
+      "seatsQty": 5
+    }
+  ```
+
+  - Quando não for possível listar um carro que não existe retornará o `status 404` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Car not found" }
+  ```
+  - Quando não é possível listar um carro quando o formato do `id` esta inválido retornará o `status 422` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Invalid mongo id" }
+  ```
+</details>
+
+---
+
+### A rota PUT:/cars/:id onde é possível atualizar um carro por ID
+<details open>
+
+  - Através do caminho (`/cars/:id`), será possível atualizar, apenas o carro com o `id` presente na URL, com o seguinte formato de corpo da requisição tem o formato abaixo:
+  ```json
+  {
+    "model": "Marea",
+    "year": 1992,
+    "color": "Red",
+    "status": true,
+    "buyValue": 12.000,
+    "doorsQty": 2,
+    "seatsQty": 5
+  }
+  ```
+
+  - Que quando atualizado retornará um JSON com as seguintes chaves:
+  ```json
+    {
+      "id": "634852326b35b59438fbea2f",
+      "model": "Marea",
+      "year": 1992,
+      "color": "Red",
+      "status": true,
+      "buyValue": 12.000,
+      "doorsQty": 2,
+      "seatsQty": 5
+    }
+  ```
+
+  - Não será possível alterar um carro que não existe, irá retornar o `status 404` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Car not found" }
+  ```
+
+  - Não será possível alterar um carro quando o formato do `id` esta inválido irá retornar o `status 422` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Invalid mongo id" }
+  ```
+</details>
+
+---
+
+### A rota DELETE:/cars/:id é possível excluir um carro por ID
+<details open>
+
+- Através do caminho `/cars/:id`, [e possível deletar do banco apenas o carro com o `id` presente na URL, retornando `status 204` sem body;
+- Não é possível excluir um carro que não existe, retornará `status 404` e um JSON com a mensagem:
+
+```json
+  { "message": "Car not found" }
+```
+
+- Não é possível excluir um carro quando o formato do `id` esta inválido, e retornará `status 422` e um JSON com a mensagem:
+
+```json
+  { "message": "Invalid mongo id" }
+```
+</details>
+
+---
+
+### A rota POST:/motorcycles é possível cadastrar uma moto
+<details open>
+
+  - Através do caminho `/motorcycles` é possível acessar o banco de dados do MongoDB e realizar o cadastro de uma moto, com o seguinte formato de corpo da requisição tem o formato abaixo:
+
+  ```json
+  {
+  "model": "Honda Cb 600f Hornet",
+  "year": 2005,
+  "color": "Yellow",
+  "status": true,
+  "buyValue": 30.000,
+  "category": "Street",
+  "engineCapacity": 600
+  }
+  ```
+  - Que quando cadastrado retornará um JSON com as seguintes chaves:
+  ```json
+  {
+    "id": "6348513f34c397abcad040b2",
+    "model": "Honda Cb 600f Hornet",
+    "year": 2005,
+    "color": "Yellow",
+    "status": true,
+    "buyValue": 30.000,
+    "category": "Street",
+    "engineCapacity": 600
+  }
+  ```
+</details>
+
+---
+
+### A rota GET:/motorcycles é possível listar todos as motos e a  rota GET:/motorcycles/:id é possível listar uma moto
+<details open>
+
+  - Através do caminho (`/motorcycles`) e (`/motorcycles/:id`) é possível listar as motos da collection `motorcycles` do banco de dados e apenas a moto com o `id` presente na URL deve ser retornado, respectivamente;
+
+  - Será validado que é possível listar todos as motos;
+  - Sendo os JSON's respectivos: 
+  ```json
+  [
+    {
+      "id": "634852326b35b59438fbea2f",
+      "model": "Honda Cb 600f Hornet",
+      "year": 2005,
+      "color": "Yellow",
+      "status": true,
+      "buyValue": 30.000,
+      "category": "Street",
+      "engineCapacity": 600
+    },
+    {
+      "id": "634852326b35b59438fbea31",
+      "model": "Honda Cbr 1000rr",
+      "year": 2011,
+      "color": "Orange",
+      "status": true,
+      "buyValue": 59.900,
+      "category": "Street",
+      "engineCapacity": 1000
+    }
+  ]
+  ```
+
+  ```json
+  {
+    "id": "634852326b35b59438fbea31",
+    "model": "Honda Cbr 1000rr",
+    "year": 2011,
+    "color": "Orange",
+    "status": true,
+    "buyValue": 59.900,
+    "category": "Street",
+    "engineCapacity": 1000
+  }
+  ```
+  - Quando não for possível listar uma moto que não existe retornará o `status 404` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Motorcycle not found" }
+  ```
+  - Quando não é possível listar uma moto quando o formato do `id` esta inválido retornará o `status 422` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Invalid mongo id" }
+  ```
+</details>
+
+---
+
+### A rota PUT:/motorcycles/:id onde é possível atualizar uma moto por ID
+<details open>
+
+  - Através do caminho (`/motorcycles/:id`), será possível atualizar, apenas a moto com o `id` presente na URL, com o seguinte formato de corpo da requisição tem o formato abaixo:
+  ```json
+  {
+    "model": "Marea",
+    "year": 1992,
+    "color": "Red",
+    "status": true,
+    "buyValue": 12.000,
+    "doorsQty": 2,
+    "seatsQty": 5
+  }
+  ```
+
+  - Que quando atualizado retornará um JSON com as seguintes chaves:
+  ```json
+    {
+      "model": "Honda Cb 600f Hornet",
+      "year": 2014,
+      "color": "Red",
+      "status": true,
+      "buyValue": 45.000,
+      "category": "Street",
+      "engineCapacity": 600
+    }
+  ```
+
+  - Não será possível alterar uma moto que não existe, irá retornar o `status 404` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Motorcycle not found" }
+  ```
+
+  - Não será possível alterar uma moto quando o formato do `id` esta inválido irá retornar o `status 422` e um JSON com a seguinte mensagem: 
+  ```json
+    { "message": "Invalid mongo id" }
+  ```
+</details>
+
+---
+
+### A rota DELETE:/motorcycles/:id é possível excluir um carro por ID
+<details open>
+
+- Através do caminho `/motorcycles/:id`, é possível deletar do banco apenas o carro com o `id` presente na URL, retornando `status 204` sem body;
+- Não é possível excluir um carro que não existe, retornará `status 404` e um JSON com a mensagem:
+
+```json
+  { "message": "Motorcycle not found" }
+```
+
+- Não é possível excluir um carro quando o formato do `id` esta inválido, e retornará `status 422` e um JSON com a mensagem:
+
+```json
+  { "message": "Invalid mongo id" }
+```
+</details>
+
+---
+### 🛠 Execução de testes localmente
+
 <details>
-  <summary><strong>🛠 Execução de testes localmente</strong></summary>
 
   Foi realizado a implementação de testes unitários na camada Service. Foi utilizado as bibliotecas `Sinon`, `Chai` e `Mocha` integrando o Mongoose para acessar as camadas conforme a camada.
 
@@ -53,14 +369,6 @@ Quer ver o projeto funcionando dentro do ambiente do MongoDB?
   ```
   describe.skip('...', () => {})
   ```
-  <br>
 </details>
 
-
-# Me dê feedbacks sobre o projeto!
-
-Entre em contato pelas redes sociais e me dê dicas, conselhos e informações que julgar necessario para o meu crescimento como dev.
-
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white&link=https://github.com/erikadeolima)](https://github.com/erikadeolima)
-[![Linkedin Badge](https://img.shields.io/badge/-erikadeolima-blue?style=flat&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/erikadeolima/)](https://www.linkedin.com/in/erikadeolima/)
-[![Hotmail](https://img.shields.io/badge/-erikadeolima-c14438?style=flat&logo=microsoft-outlook&logoColor=white&link=mailto:erikadeo.lima@hotmail.com)](mailto:erikadeo.lima@hotmail.com)
+---
